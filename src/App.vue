@@ -7,15 +7,6 @@
 <script>
 /* eslint-disable */
 const config = {
-  elements: [
-    { // node a
-      data: { id: 'a' }
-    }, { // node b
-      data: { id: 'b' }
-    }, { // edge ab
-      data: { id: 'ab', source: 'a', target: 'b' }
-    }
-  ],
   style: [
     {
       selector: 'node',
@@ -23,7 +14,8 @@ const config = {
         'background-color': '#666',
         'label': 'data(id)'
       }
-    }, {
+    },
+    {
       selector: 'edge',
       style: {
         'width': 3,
@@ -32,36 +24,45 @@ const config = {
         'target-arrow-shape': 'triangle'
       }
     }
-  ],
-  layout: {
-    name: 'grid',
-    rows: 1
-  }
+  ]
 }
 
 export default {
   name: 'App',
   data () {
     return {
-      config,
-      i: 1
+      config
     }
   },
   methods: {
     preConfig (cytoscape) {
       console.log('calling pre-config')
-	  // let's register a tap event, for instance
-      const that = this
-      this.$cytoscape.reset()
-      this.$cytoscape.instance.then(cy => {
-        cy.on('tap', event => {
-          console.log('tapped by', that.i, 'time')
-          that.i++
-        })
-      })
     },
     afterCreated (cy) {
       console.log('after created')
+      cy.on("dragfree", "node", evt => this.setCyElements(cy))
+      this.setCyElements(cy)
+    },
+    setCyElements(cy) {
+      console.log("setCyElements")
+      let cytoElems = [
+        { // node a
+          data: { id: 'a' }, position: {x: 100, y:100}
+        },
+        { // node b
+          data: { id: 'b' }, position: {x: 200, y:100}
+        },
+        { // edge ab
+          data: { id: 'ab', source: 'a', target: 'b' }
+        }
+      ]
+      cy.startBatch()
+        cy.elements().remove()
+        for (let el of cytoElems) {
+          cy.add(el)
+        }
+      cy.endBatch()
+      cy.fit()
     }
   }
 }
@@ -69,14 +70,15 @@ export default {
 
 <style>
 #holder {
-  width: 100%;
-  height: 400px;
+  width: 600px;
+  height: 600px;
+  border: 1px red solid;
 }
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  text-align: justify;
   color: #2c3e50;
   margin-top: 60px;
 }

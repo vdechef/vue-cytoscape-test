@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "vue": "^2.5.17",
-    "vue-cytoscape": "^0.1.2"
+    "vue-cytoscape": "0.2.5"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.5",
